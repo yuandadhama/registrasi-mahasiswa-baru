@@ -27,7 +27,7 @@ public class SecurityConfig {
 		http
 				.authorizeHttpRequests(auth -> auth
 						// Izinkan akses publik ke halaman pendaftaran dan static resources
-						.requestMatchers("/", "/daftar", "/sukses", "/captcha/**").permitAll()
+						.requestMatchers("/", "/daftar", "/sukses", "/captcha/**", "/api/wilayah/**").permitAll()
 						.requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
 						// Halaman admin hanya untuk role ADMIN
 						.requestMatchers("/admin/**").hasRole("ADMIN")
@@ -47,7 +47,7 @@ public class SecurityConfig {
 						.permitAll())
 				// Nonaktifkan CSRF untuk kemudahan pengembangan (aktifkan di production)
 				.csrf(csrf -> csrf
-						.ignoringRequestMatchers("/captcha/**"));
+						.ignoringRequestMatchers("/captcha/**", "/api/wilayah/**"));
 
 		return http.build();
 	}
