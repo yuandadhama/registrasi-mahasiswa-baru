@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Pencarian Pendaftar</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+
+  <body class="admin-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-links">
+        <a th:href="@{/}" class="nav-link">Form Pendaftaran</a>
+
+        <a th:href="@{/admin/dashboard}" class="nav-link"> Daftar Pendaftar </a>
+      </div>
+    </nav>
+
+    <div class="admin-container">
+      <div class="search-card">
+        <h2>🔍 Pencarian Pendaftar</h2>
+
+        <!-- FORM SEARCH -->
+        <div class="form-group">
+          <label>Keyword (Nama / NIM)</label>
+
+          <input
+            type="text"
+            id="searchKeyword"
+            class="form-control"
+            placeholder="Masukkan nama atau NIM"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Status</label>
+
+            <select id="statusFilter" class="form-control">
+              <option value="SEMUA">Semua Status</option>
+              <option value="PENDING">PENDING</option>
+              <option value="VERIFIED">VERIFIED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- HASIL -->
+        <div id="searchResults" class="search-results">
+          <p class="result-count">
+            Hasil Pencarian:
+            <strong>0 data ditemukan</strong>
+          </p>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>NIM</th>
+                <th>Prodi</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td colspan="5" class="text-center">
+                  Silakan lakukan pencarian.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/pencarian.js}"></script>
+  </body>
+</html>

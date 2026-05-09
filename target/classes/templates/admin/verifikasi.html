@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Pendaftaran</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="admin-page">
+
+<div class="container">
+    <div class="verifikasi-card">
+        <h1>Verifikasi Pendaftaran</h1>
+
+        <!-- Detail calon mahasiswa -->
+        <div class="detail-box">
+            <div class="detail-row">
+                <span class="detail-label">Nama:</span>
+                <span class="detail-value" th:text="${calon.namaLengkap}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">NIM:</span>
+                <span class="detail-value" th:text="${calon.nim}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Prodi:</span>
+                <span class="detail-value" th:text="${calon.programStudi}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value" th:text="${calon.email}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Telepon:</span>
+                <span class="detail-value" th:text="${calon.nomorTelepon}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Tanggal Lahir:</span>
+                <span class="detail-value" th:text="${#temporals.format(calon.tanggalLahir, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Alamat:</span>
+                <span class="detail-value" th:text="${calon.alamat}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Asal Sekolah:</span>
+                <span class="detail-value" th:text="${calon.asalSekolah}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">
+                    <span th:switch="${calon.status.name()}">
+                        <span th:case="'PENDING'" class="badge badge-pending">PENDING</span>
+                        <span th:case="'VERIFIED'" class="badge badge-verified">VERIFIED</span>
+                        <span th:case="'REJECTED'" class="badge badge-rejected">REJECTED</span>
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Form Verifikasi -->
+        <form th:action="@{/admin/verifikasi/{id}(id=${calon.id})}" method="post">
+            <div class="form-group">
+                <label><strong>Status Verifikasi</strong></label>
+                <select name="status" class="form-control" required>
+                    <option value="">Pilih Status</option>
+                    <option value="VERIFIED">Terverifikasi</option>
+                    <option value="REJECTED">Ditolak</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit">Proses Verifikasi</button>
+        </form>
+
+        <div class="text-center" style="margin-top: 12px;">
+            <a th:href="@{/admin/dashboard}" class="link-kembali">Kembali</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

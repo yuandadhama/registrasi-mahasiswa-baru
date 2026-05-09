@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Mahasiswa Baru</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>Pendaftaran Mahasiswa Baru</h1>
+            <p th:text="'Tahun Akademik: ' + ${tahunAkademik}">Tahun Akademik: 2026/2027</p>
+        </div>
+
+        <!-- Pesan error global (email duplikat, dll) -->
+        <div th:if="${errorMessage}" class="alert alert-error">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <form th:action="@{/daftar}" th:object="${calonMahasiswa}" method="post" id="formPendaftaran" novalidate>
+
+            <!-- Nama Lengkap -->
+            <div class="form-group">
+                <label for="namaLengkap">Nama Lengkap <span class="required">*</span></label>
+                <input type="text" id="namaLengkap" th:field="*{namaLengkap}"
+                       placeholder="Contoh: Muhammad Rizki"
+                       class="form-control" th:classappend="${#fields.hasErrors('namaLengkap')} ? 'is-invalid' : ''">
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('namaLengkap')}" th:errors="*{namaLengkap}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('namaLengkap')}">Nama Lengkap wajib diisi</span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ Minimal 4 karakter (contoh: Budi, Siti)</span>
+                </div>
+            </div>
+
+            <!-- NIM -->
+            <div class="form-group">
+                <label for="nim">NIM (Nomor Induk Mahasiswa) <span class="required">*</span></label>
+                <input type="text" id="nim" th:field="*{nim}"
+                       placeholder="10 digit angka"
+                       maxlength="10"
+                       class="form-control" th:classappend="${#fields.hasErrors('nim')} ? 'is-invalid' : ''">
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('nim')}" th:errors="*{nim}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('nim')}">NIM wajib diisi</span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ 10 digit angka, contoh: 2024000001</span>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Alamat Email <span class="required">*</span></label>
+                <input type="email" id="email" th:field="*{email}"
+                       placeholder="contoh: nama@domain.com"
+                       class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('email')}">Email wajib diisi</span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ Gunakan email aktif untuk konfirmasi pendaftaran</span>
+                </div>
+            </div>
+
+            <!-- Nomor Telepon -->
+            <div class="form-group">
+                <label for="nomorTelepon">Nomor Telepon / WhatsApp <span class="required">*</span></label>
+                <input type="text" id="nomorTelepon" th:field="*{nomorTelepon}"
+                       placeholder="081234567890 atau 6281234567890"
+                       maxlength="14"
+                       class="form-control" th:classappend="${#fields.hasErrors('nomorTelepon')} ? 'is-invalid' : ''">
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('nomorTelepon')}" th:errors="*{nomorTelepon}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('nomorTelepon')}">Nomor Telepon wajib diisi</span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ Contoh: 081234567890 (10-13 digit), diawali 08 atau 62</span>
+                </div>
+            </div>
+
+            <!-- Tanggal Lahir & Program Studi (dalam satu baris) -->
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="tanggalLahir">Tanggal Lahir <span class="required">*</span></label>
+                    <input type="date" id="tanggalLahir" th:field="*{tanggalLahir}"
+                           class="form-control" th:classappend="${#fields.hasErrors('tanggalLahir')} ? 'is-invalid' : ''">
+                    <div class="field-hint">
+                        <span th:if="${#fields.hasErrors('tanggalLahir')}" th:errors="*{tanggalLahir}" class="error-text warn-icon"></span>
+                        <span th:unless="${#fields.hasErrors('tanggalLahir')}" class="hint-info">ℹ Minimal berusia 18 tahun</span>
+                    </div>
+                </div>
+
+                <div class="form-group half">
+                    <label for="programStudi">Program Studi <span class="required">*</span></label>
+                    <select id="programStudi" th:field="*{programStudi}"
+                            class="form-control" th:classappend="${#fields.hasErrors('programStudi')} ? 'is-invalid' : ''">
+                        <option value="">Pilih Program Studi</option>
+                        <option th:each="prodi : ${programStudiList}"
+                                th:value="${prodi}"
+                                th:text="${prodi}"></option>
+                    </select>
+                    <div class="field-hint">
+                        <span th:if="${#fields.hasErrors('programStudi')}" th:errors="*{programStudi}" class="error-text warn-icon"></span>
+                        <span th:unless="${#fields.hasErrors('programStudi')}" class="warn-icon">⚠ ⚠ Mohon pilih program studi</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alamat Lengkap -->
+            <div class="form-group">
+                <label for="alamat">Alamat Lengkap <span class="required">*</span></label>
+                <textarea id="alamat" th:field="*{alamat}"
+                          placeholder="Isi dengan alamat lengkap (jalan, nomor, RT/RW, kelurahan, kecamatan, kota)"
+                          rows="3"
+                          class="form-control" th:classappend="${#fields.hasErrors('alamat')} ? 'is-invalid' : ''"></textarea>
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('alamat')}" th:errors="*{alamat}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('alamat')}">Alamat wajib diisi</span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ Minimal 15 karakter. Semakin detail semakin baik</span>
+                </div>
+            </div>
+
+            <!-- Asal Sekolah -->
+            <div class="form-group">
+                <label for="asalSekolah">Asal Sekolah <span class="required">*</span></label>
+                <input type="text" id="asalSekolah" th:field="*{asalSekolah}"
+                       placeholder="Contoh: SMA Negeri 1 Jakarta"
+                       class="form-control" th:classappend="${#fields.hasErrors('asalSekolah')} ? 'is-invalid' : ''">
+                <div class="field-hint">
+                    <span class="warn-icon">⚠ ⚠</span>
+                    <span th:if="${#fields.hasErrors('asalSekolah')}" th:errors="*{asalSekolah}" class="error-text"></span>
+                    <span th:unless="${#fields.hasErrors('asalSekolah')}">Asal sekolah wajib diisi</span>
+                </div>
+            </div>
+
+            <!-- Captcha -->
+            <div class="form-group">
+                <label>Kode Keamanan (Captcha) <span class="required">*</span></label>
+                <div class="captcha-box">
+                    <div class="captcha-display" id="captchaDisplay">
+                        <span th:text="${captchaCode}" id="captchaText"></span>
+                    </div>
+                    <button type="button" class="btn-refresh" id="btnRefreshCaptcha" onclick="refreshCaptcha()">
+                        ↻ Refresh Captcha
+                    </button>
+                </div>
+                <input type="text" name="captchaInput" id="captchaInput"
+                       placeholder="Masukkan kode captcha di atas"
+                       class="form-control" th:classappend="${captchaError != null} ? 'is-invalid' : ''">
+                <div th:if="${captchaError}" class="field-hint error-text">
+                    <span th:text="${captchaError}"></span>
+                </div>
+                <div class="field-hint hint-info">
+                    <span>ℹ Kode tidak case sensitive, klik refresh jika(@#$) tidak terbaca</span>
+                </div>
+            </div>
+
+            <!-- Tombol Submit -->
+            <button type="submit" class="btn-submit" id="btnDaftar">
+                Daftar Sekarang
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/pendaftaran.js}"></script>
+</body>
+</html>

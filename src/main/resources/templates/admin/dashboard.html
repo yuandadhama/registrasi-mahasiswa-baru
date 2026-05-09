@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="admin-page">
+    <!-- Navbar Admin -->
+    <nav class="navbar">
+      <div class="navbar-brand">Daftar Calon Mahasiswa</div>
+      <div class="navbar-links">
+        <a th:href="@{/}" class="nav-link">Form Pendaftaran</a>
+        <a th:href="@{/admin/pencarian}" class="nav-link">Pencarian</a>
+        <form th:action="@{/logout}" method="post" style="display: inline">
+          <button type="submit" class="nav-link btn-nav-logout">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="admin-container">
+      <!-- Flash messages -->
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-error"
+        th:text="${errorMessage}"
+      ></div>
+
+      <!-- Statistik Kartu -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-number" th:text="${totalPendaftar}">0</div>
+          <div class="stat-label">Total Pendaftar</div>
+        </div>
+        <div class="stat-card stat-pending">
+          <div class="stat-number" th:text="${menungguVerifikasi}">0</div>
+          <div class="stat-label">Menunggu Verifikasi</div>
+        </div>
+        <div class="stat-card stat-verified">
+          <div class="stat-number" th:text="${terverifikasi}">0</div>
+          <div class="stat-label">Terverifikasi</div>
+        </div>
+      </div>
+
+      <!-- Tabel Daftar Calon Mahasiswa -->
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nama Lengkap</th>
+              <th>NIM</th>
+              <th>Prodi</th>
+              <th>Tanggal Daftar</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="calon, stat : ${daftarCalon}">
+              <td th:text="${currentPage * 10 + stat.index + 1}"></td>
+              <td th:text="${calon.namaLengkap}"></td>
+              <td th:text="${calon.nim}"></td>
+              <td th:text="${calon.programStudi}"></td>
+              <td
+                th:text="${#temporals.format(calon.tanggalDaftar, 'dd/MM/yyyy')}"
+              ></td>
+              <td>
+                <span th:switch="${calon.status.name()}">
+                  <span th:case="'PENDING'" class="badge badge-pending"
+                    >PENDING</span
+                  >
+                  <span th:case="'VERIFIED'" class="badge badge-verified"
+                    >VERIFIED</span
+                  >
+                  <span th:case="'REJECTED'" class="badge badge-rejected"
+                    >REJECTED</span
+                  >
+                </span>
+              </td>
+              <td>
+                <a
+                  th:if="${calon.status.name() == 'PENDING'}"
+                  th:href="@{/admin/verifikasi/{id}(id=${calon.id})}"
+                  class="btn-verifikasi"
+                  >Verifikasi</a
+                >
+                <span th:unless="${calon.status.name() == 'PENDING'}">-</span>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(daftarCalon)}">
+              <td colspan="7" class="text-center">Belum ada data pendaftar.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Navigation -->
+      <div class="pagination" th:if="${totalPages > 1}">
+        <!-- Tombol Previous -->
+        <a
+          th:if="${currentPage > 0}"
+          th:href="@{/admin/dashboard(page=${currentPage - 1})}"
+          class="page-btn"
+          >&laquo; Sebelumnya</a
+        >
+        <span th:unless="${currentPage > 0}" class="page-btn page-btn-disabled">
+          &laquo; Sebelumnya
+        </span>
+
+        <!-- Nomor Halaman -->
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+          <a
+            th:if="${i != currentPage}"
+            th:href="@{/admin/dashboard(page=${i})}"
+            th:text="${i + 1}"
+            class="page-btn"
+          ></a>
+          <span
+            th:if="${i == currentPage}"
+            th:text="${i + 1}"
+            class="page-btn page-btn-active"
+          ></span>
+        </span>
+
+        <!-- Tombol Next -->
+        <a
+          th:if="${currentPage < totalPages - 1}"
+          th:href="@{/admin/dashboard(page=${currentPage + 1})}"
+          class="page-btn"
+          >Selanjutnya &raquo;</a
+        >
+        <span
+          th:unless="${currentPage < totalPages - 1}"
+          class="page-btn page-btn-disabled"
+        >
+          Selanjutnya &raquo;
+        </span>
+      </div>
+    </div>
+  </body>
+</html>

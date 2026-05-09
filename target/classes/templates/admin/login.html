@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="login-page">
+<div class="container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Admin Panel</h1>
+            <p>Registrasi Mahasiswa Baru</p>
+        </div>
+
+        <!-- Pesan error login -->
+        <div th:if="${errorMessage}" class="alert alert-error">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Pesan sukses logout -->
+        <div th:if="${logoutMessage}" class="alert alert-success">
+            <span th:text="${logoutMessage}"></span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <!-- CSRF token otomatis ditambahkan Spring Security -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username"
+                       placeholder="Masukkan username"
+                       class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Masukkan password"
+                       class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Login</button>
+        </form>
+
+        <div class="login-footer">
+            <a th:href="@{/}">← Kembali ke Form Pendaftaran</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
